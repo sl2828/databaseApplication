@@ -1,22 +1,13 @@
-import logo from './assets/logo.svg';
+import squirrel from './assets/squirrel.png';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={squirrel} className="Squirrel-picture" alt="squirrel" />
         <h1> Hello World! </h1>
         <p> This is going to be my database application project. </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-
       </header>
     </div>
   );
