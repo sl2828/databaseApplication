@@ -1,27 +1,28 @@
 import React from 'react';
 import '../styles/navbar.css';
 import squirrel from '../assets/squirrel.png';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
   <nav className="navbar">
     <div className="navbar-left">
       <li>
-        <a href="/home" className="logo">
+        <Link to="/home" className="logo">
           Aviary Ailment Appointments
-        </a>
+        </Link>
       </li>
     </div>
     <div className="navbar-center">
       <ul className="nav-links">
         <li>
-          <a href="/appointments">Schedule Appointments</a>
+          <Link to="/appointments">Schedule Appointments</Link>
         </li>
         <li>
-          <a href="/patient-owner-info">Patient & Owner Registration</a>
+          <Link to="/patient-owner-info">Patient & Owner Registration</Link>
         </li>
         <li>
-          <a href="/data">Data Analysis</a>
+          <Link to="/data">Data Analysis</Link>
         </li>
       </ul>
     </div>
