@@ -12,7 +12,6 @@
     font-weight: bold;
     color: #000000;
     text-decoration: none;
-    pointer-events: none;
     margin-left: 1rem;
   }
   
@@ -21,15 +20,23 @@
     display: flex;
     margin: 0;
     padding: 0;
+    align-items: stretch
   }
   
   .navbar-center .nav-links li {
     margin-right: 1rem;
   }
+
+  .navbar-center .nav-links li:hover {
+    background-color: #ffffff;
+  }
   
   .navbar-center .nav-links a {
     color: #000000;
     text-decoration: none;
+    height: 100%;
+    padding: .25rem;
+    display: flex
   }
   
   .navbar-right {
