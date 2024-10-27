@@ -1,10 +1,11 @@
 import './App.css';
-import { Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from './components/navbar';
 import Home from './pages/Home.js'
 import Data from './pages/Data.js'
 import PatientOwner from './pages/PatientOwner.js'
 import Appointments from './pages/Appointments.js'
+
 
 function App() {
     return (
