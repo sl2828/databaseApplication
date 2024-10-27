@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Navbar from './components/navbar';
 import Home from './pages/Home.js'
 import Data from './pages/Data.js'
-import OwnerList from './pages/OwnerList.js'
+import PatientOwnerList from './pages/PatientOwnerList.js'
 import Appointments from './pages/Appointments.js'
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/appointments" element={<Appointments />} />
-            <Route path="/patient-owner-info" element={<OwnerList />} />
+            <Route path="/patient-owner-info" element={<PatientOwnerList />} />
             <Route path="/data" element={<Data />} />
             <Route path="*" element={<Home />} /> {/* Default route */}
           </Routes>
