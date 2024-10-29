@@ -19,7 +19,7 @@ const Navbar = () => {
           <Link to="/appointments">Schedule Appointments</Link>
         </li>
         <li>
-          <Link to="/patient-owner-info">Patient & Owner Registration</Link>
+          <Link to="/patient-owner-info">Patient & Owner Information</Link>
         </li>
         <li>
           <Link to="/data">Data Analysis</Link>

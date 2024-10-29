@@ -1,0 +1,44 @@
+.text-lg {
+    font-size: 1.125rem; /* Or adjust according to your preference */
+}
+
+.table {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.table th,
+.table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #ccc; /* Light gray border */
+}
+  
+.table th {
+    background-color: #f9f9f9; /* Light gray background */
+}
+  
+.table tr:hover {
+    background-color: #f1f1f1; /* Darker gray on hover */
+}
+  
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid #ccc; /* Border color */
+    background-color: #e0e0e0; /* Background color */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition */
+}
+  
+.button:hover {
+    background-color: #d0d0d0; /* Background color on hover */
+}
+  
+.flex {
+    display: flex;
+    gap: 8px; /* Gap between buttons */
+ }
