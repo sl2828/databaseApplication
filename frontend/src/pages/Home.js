@@ -1,5 +1,5 @@
 import '../styles/home.css';
-import '../styles/Lists.css';
+import '../styles/lists.css';
 import { useEffect, useState } from "react";
 
 const Species = (props) => (
@@ -78,8 +78,6 @@ export default function Home() {
       });
     }
   
-
-
     return (
         <>
             <div className="header">

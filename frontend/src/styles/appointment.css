@@ -1,0 +1,98 @@
+.appointment-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .form-title {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 16px;
+  }
+  
+  .form-container {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .form-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #d1d5db;
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2937;
+  }
+  
+  .input-wrapper {
+    margin-top: 8px;
+    display: flex;
+    border-radius: 6px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+  }
+  
+  .input-field {
+    border: none;
+    flex: 1;
+    font-size: 14px;
+    color: #1f2937;
+    padding-left: 8px;
+  }
+  
+  .options {
+    margin-top: 16px;
+  }
+  
+  .options-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .radio-input {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  
+  .submit-button {
+    display: inline-flex;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    margin-top: 16px;
+  }

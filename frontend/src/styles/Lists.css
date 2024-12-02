@@ -13,6 +13,14 @@
     text-align: left;
     border-bottom: 1px solid #ccc; /* Light gray border */
 }
+
+.actions {
+    padding: 16px;
+    text-align: left;
+    color: #8470e3; /* Text color */
+    border-bottom: 1px solid #ccc; /* Light gray border */
+}
+  
   
 .table th {
     background-color: #f9f9f9; /* Light gray background */
