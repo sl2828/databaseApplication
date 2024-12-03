@@ -4,7 +4,7 @@ import '../styles/appointment.css';
 
 export default function Appointment() {
   const [form, setForm] = useState({
-    id: "",
+    _id: "",
     petName: "",
     date: "",
     ownerSSN: "",
@@ -55,9 +55,9 @@ async function onSubmit(e) {
     const person = { ...form };
     try {
       // if the id is present, we will set the URL to /record/:id, otherwise we will set the URL to /record.
-      const response = await fetch(`http://localhost:5050/appointment${params.id ? "/"+params.id : ""}`, {
+      const response = await fetch(`http://localhost:5050/appointment${params._id ? "/"+params._id : ""}`, {
         // if the id is present, we will use the PATCH method, otherwise we will use the POST method.
-        method: `${params.id ? "PATCH" : "POST"}`,
+        method: `${params._id ? "PATCH" : "POST"}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -70,7 +70,7 @@ async function onSubmit(e) {
     } catch (error) {
       console.error('A problem occurred with your fetch operation: ', error);
     } finally {
-      setForm({ id: "", petName: "", date: "", ownerSSN: "", time: "", vetLicenseNumber: "" });
+      setForm({ _id: "", petName: "", date: "", ownerSSN: "", time: "", vetLicenseNumber: "" });
       navigate("/appointments");
     }
   }
@@ -152,7 +152,7 @@ useEffect(() => {
                     id="id"
                     placeholder="***-****"
                     value={form._id}
-                    onChange={(e) => updateForm({ id: e.target.value })}
+                    onChange={(e) => updateForm({ _id: e.target.value })}
                     className="input-field"
                 />
                 </div>

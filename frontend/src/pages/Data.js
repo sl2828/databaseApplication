@@ -3,69 +3,74 @@ import { useParams, useNavigate } from "react-router-dom";
 import '../styles/data.css';
 
 export default function Data() {
-  // This following section will display the form that takes the input from the user.
   return (
-    <div className="appointment-container">
-      <h3 className="form-title">Create/Update Appointment</h3>
-      <form onSubmit={onSubmit} className="form-container">
-      <div className="form-section">
-          <div>
-          <h2 className="section-title">Appointment Info</h2>
-          </div>
-  
-          <div className="form-grid">
-  
-            <div>
-                <fieldset className="options">
-                <legend className="sr-only">Owner SSN</legend>
-                <div className="options-container">
-                    {ownerSSN.map((ownerSSN) => (
-                    <label key={ownerSSN} className="radio-label">
-                        <input
-                        type="radio"
-                        name="ownerSSNOptions"
-                        value={ownerSSN}
-                        checked={form.ownerSSN === ownerSSN}
-                        onChange={(e) => updateForm({ ownerSSN: e.target.value })}
-                        className="radio-input"
-                        />
-                        {ownerSSN}
-                    </label>
-                    ))}
-                </div>
-                </fieldset>
-            </div>
-            <div>
-                <fieldset className="options">
-                <legend className="sr-only">Patient Name</legend>
-                <div className="options-container">
-                    {petName.map((petName) => (
-                    <label key={petName} className="radio-label">
-                        <input
-                        type="radio"
-                        name="petNameOptions"
-                        value={petName}
-                        checked={form.petName === petName}
-                        onChange={(e) => updateForm({ petName: e.target.value })}
-                        className="radio-input"
-                        />
-                        {petName}
-                    </label>
-                    ))}
-                </div>
-                </fieldset>
-            </div>
+   <div>
 
-          </div>
-      </div>
-      <input
-          type="submit"
-          value="Submit"
-          className="submit-button"
-      />
-      </form>
-    </div>
-  );
+   </div>
+  )
+  // This following section will display the form that takes the input from the user.
+  // return (
+  //   <div className="appointment-container">
+  //     <h3 className="form-title">Create/Update Appointment</h3>
+  //     <form onSubmit={onSubmit} className="form-container">
+  //     <div className="form-section">
+  //         <div>
+  //         <h2 className="section-title">Appointment Info</h2>
+  //         </div>
+  
+  //         <div className="form-grid">
+  
+  //           <div>
+  //               <fieldset className="options">
+  //               <legend className="sr-only">Owner SSN</legend>
+  //               <div className="options-container">
+  //                   {ownerSSN.map((ownerSSN) => (
+  //                   <label key={ownerSSN} className="radio-label">
+  //                       <input
+  //                       type="radio"
+  //                       name="ownerSSNOptions"
+  //                       value={ownerSSN}
+  //                       checked={form.ownerSSN === ownerSSN}
+  //                       onChange={(e) => updateForm({ ownerSSN: e.target.value })}
+  //                       className="radio-input"
+  //                       />
+  //                       {ownerSSN}
+  //                   </label>
+  //                   ))}
+  //               </div>
+  //               </fieldset>
+  //           </div>
+  //           <div>
+  //               <fieldset className="options">
+  //               <legend className="sr-only">Patient Name</legend>
+  //               <div className="options-container">
+  //                   {petName.map((petName) => (
+  //                   <label key={petName} className="radio-label">
+  //                       <input
+  //                       type="radio"
+  //                       name="petNameOptions"
+  //                       value={petName}
+  //                       checked={form.petName === petName}
+  //                       onChange={(e) => updateForm({ petName: e.target.value })}
+  //                       className="radio-input"
+  //                       />
+  //                       {petName}
+  //                   </label>
+  //                   ))}
+  //               </div>
+  //               </fieldset>
+  //           </div>
+
+  //         </div>
+  //     </div>
+  //     <input
+  //         type="submit"
+  //         value="Submit"
+  //         className="submit-button"
+  //     />
+  //     </form>
+  //   </div>
+  // );
 }
 
 /*

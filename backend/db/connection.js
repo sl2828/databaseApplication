@@ -1,26 +1,16 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
 
-const uri = process.env.ATLAS_URI || "";
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+async function connectDB() {
+  //ATLAS_URI=mongodb+srv://linselin2828:yDPEYY8ntmQEEmtF@petcluster.mtzzu.mongodb.net/?retryWrites=true&w=majority&appName=petCluster
+  const uri = process.env.ATLAS_URI; // Replace with your DB name
 
-try {
-  // Connect the client to the server
-  await client.connect();
-  // Send a ping to confirm a successful connection
-  await client.db("admin").command({ ping: 1 });
-  console.log(
-   "Pinged your deployment. You successfully connected to MongoDB!"
-  );
-} catch(err) {
-  console.error(err);
+  try {
+    await mongoose.connect(uri);
+    console.log("Connected to MongoDB using Mongoose");
+  } catch (err) {
+    console.error("Failed to connect to MongoDB", err);
+    process.exit(1); // Exit if connection fails
+  }
 }
 
-let db = client.db("veterinary");
-
-export default db;
+export default connectDB;
