@@ -73,28 +73,28 @@ export default function AppointmentList() {
     <>
       <div className="everything">
         <h3 className="text-lg">Appointment List</h3>
-          <table className= "table">
-            <thead>
-              <tr>
-                <th> Appointment ID </th>
-                <th> PatientName </th>
-                <th> Date </th>
-                <th> Time </th>
-                <th> Owner SSN </th>
-                <th> Vet License Number </th>
-                <th className="actions"> Actions </th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointmentList()}
-            </tbody>
-          </table>
+        <table className="table">
+          <thead>
+            <tr>
+              <th> Appointment ID </th>
+              <th> PatientName </th>
+              <th> Date </th>
+              <th> Time </th>
+              <th> Owner SSN </th>
+              <th> Vet License Number </th>
+              <th className="actions"> Actions </th>
+            </tr>
+          </thead>
+          <tbody>
+            {appointmentList()}
+          </tbody>
+        </table>
       </div>
 
       <div style={{ height: "50px" }} />
-      
+
       <Link to={`/appointments/edit/`}>
-          Add Appointment
+        Add Appointment
       </Link>
     </>
   );

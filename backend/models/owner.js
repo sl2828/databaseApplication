@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 const ownerSchema = new mongoose.Schema({
   _id: { type: String, required: true },   // owner SSN
   name: { type: String, required: true },
-  email: { type: Date, required: true },
+  email: { type: String, required: true },
   phoneNumber: { type: String, required: true }
 }, { versionKey: false });
 

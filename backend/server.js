@@ -6,6 +6,7 @@ import owners from "./routes/owner.js";
 import patients from "./routes/patient.js";
 import species from "./routes/species.js";
 import vets from "./routes/vet.js";
+import queryAppointments from "./routes/queryAppointments.js";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
@@ -20,6 +21,7 @@ app.use("/patient", patients);
 app.use("/species", species);
 app.use("/vet", vets);
 app.use('/appointment', appointments);
+app.use("/queryAppointments", queryAppointments);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

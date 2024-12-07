@@ -1,208 +1,154 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import '../styles/data.css';
+import React, { useState, useEffect } from "react";
+import "../styles/data.css";
 
 export default function Data() {
-  return (
-   <div>
-
-   </div>
-  )
-  // This following section will display the form that takes the input from the user.
-  // return (
-  //   <div className="appointment-container">
-  //     <h3 className="form-title">Create/Update Appointment</h3>
-  //     <form onSubmit={onSubmit} className="form-container">
-  //     <div className="form-section">
-  //         <div>
-  //         <h2 className="section-title">Appointment Info</h2>
-  //         </div>
-  
-  //         <div className="form-grid">
-  
-  //           <div>
-  //               <fieldset className="options">
-  //               <legend className="sr-only">Owner SSN</legend>
-  //               <div className="options-container">
-  //                   {ownerSSN.map((ownerSSN) => (
-  //                   <label key={ownerSSN} className="radio-label">
-  //                       <input
-  //                       type="radio"
-  //                       name="ownerSSNOptions"
-  //                       value={ownerSSN}
-  //                       checked={form.ownerSSN === ownerSSN}
-  //                       onChange={(e) => updateForm({ ownerSSN: e.target.value })}
-  //                       className="radio-input"
-  //                       />
-  //                       {ownerSSN}
-  //                   </label>
-  //                   ))}
-  //               </div>
-  //               </fieldset>
-  //           </div>
-  //           <div>
-  //               <fieldset className="options">
-  //               <legend className="sr-only">Patient Name</legend>
-  //               <div className="options-container">
-  //                   {petName.map((petName) => (
-  //                   <label key={petName} className="radio-label">
-  //                       <input
-  //                       type="radio"
-  //                       name="petNameOptions"
-  //                       value={petName}
-  //                       checked={form.petName === petName}
-  //                       onChange={(e) => updateForm({ petName: e.target.value })}
-  //                       className="radio-input"
-  //                       />
-  //                       {petName}
-  //                   </label>
-  //                   ))}
-  //               </div>
-  //               </fieldset>
-  //           </div>
-
-  //         </div>
-  //     </div>
-  //     <input
-  //         type="submit"
-  //         value="Submit"
-  //         className="submit-button"
-  //     />
-  //     </form>
-  //   </div>
-  // );
-}
-
-/*
-export default function Appointment() {
   const [form, setForm] = useState({
-    id: "",
-    petName: "",
-    date: "",
-    ownerSSN: "",
-    time: "",
-    vetLicenseNumber: "",
+    species: "",
+    startDate: "",
+    endDate: "",
   });
 
-  // eslint-disable-next-line
-  const [isNew, setIsNew] = useState(true);
-  const params = useParams();
-  const navigate = useNavigate();
+  const [species, setSpecies] = useState([]);
+  const [queryResults, setQueryResults] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      const id = params.id?.toString() || undefined;
-      if(!id) return;
-      setIsNew(false);
-      const response = await fetch(
-        `http://localhost:5050/appointment/${params.id.toString()}`
-      );
-      if (!response.ok) {
-        const message = `An error has occurred with appointments: ${response.statusText}`;
-        console.error(message);
-        return;
-      }
-      const appointment = await response.json();
-      if (!appointment) {
-        console.warn(`Appointment with id ${id} not found`);
-        navigate("/appointments");
-        return;
-      }
-      setForm(appointment);
-    }
-    fetchData();
-    return;
-  }, [params.id, navigate]);
-
-  // These methods will update the state properties.
+  // Update form state
   function updateForm(value) {
-    return setForm((prev) => {
-      return { ...prev, ...value };
-    });
+    setForm((prev) => ({ ...prev, ...value }));
   }
 
-  // This function will handle the submission.
-async function onSubmit(e) {
-    e.preventDefault();
-    const person = { ...form };
-    try {
-      // if the id is present, we will set the URL to /record/:id, otherwise we will set the URL to /record.
-      const response = await fetch(`http://localhost:5050/appointment${params.id ? "/"+params.id : ""}`, {
-        // if the id is present, we will use the PATCH method, otherwise we will use the POST method.
-        method: `${params.id ? "PATCH" : "POST"}`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(person),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  // Fetch species data for the dropdown
+  useEffect(() => {
+    async function getSpecies() {
+      try {
+        const response = await fetch("http://localhost:5050/species/");
+        if (!response.ok) {
+          throw new Error(`Error fetching species: ${response.statusText}`);
+        }
+        const data = await response.json();
+        const uniqueSpecies = Array.from(new Set(data.map((doc) => doc._id)));
+        setSpecies(uniqueSpecies);
+      } catch (error) {
+        console.error(error.message);
       }
+    }
+    getSpecies();
+  }, []);
+
+  // Handle form submission
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const truncatedStartDate = form.startDate?.slice(0, 10) || null;
+      const truncatedEndDate = form.endDate?.slice(0, 10) || null;
+
+      // Construct the query object
+      const query = {
+        species: form.species,
+        startDate: truncatedStartDate,
+        endDate: truncatedEndDate,
+      };
+
+      const response = await fetch("http://localhost:5050/queryAppointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(query),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Query failed: ${response.statusText}`);
+      }
+
+      const results = await response.json();
+      setQueryResults(results);
     } catch (error) {
-      console.error('A problem occurred with your fetch operation: ', error);
-    } finally {
-      setForm({ id: "", petName: "", date: "", ownerSSN: "", time: "", vetLicenseNumber: "" });
-      navigate("/appointments");
+      console.error("Error querying appointments:", error.message);
     }
   }
 
-const [ownerSSN, setOwnerSSNs] = useState([]);
+  //This following section will display the form that takes the input from the user.
+  return (
+    <div>
+      <h3 className="form-title">Create/Update Appointment</h3>
+      <form onSubmit={onSubmit} className="form-container">
+      <div className="form-section">
+          <div>
+          <h2 className="section-title">Appointment Info</h2>
+          </div>
+  
+          <div className="form-grid">
+  
+          <div>
+              <legend className="sr-only"> Species </legend>
+              <select
+                  id="speciesDropdown"
+                  name="speciesOptions"
+                  value={form.species}
+                  onChange={(e) => updateForm({ species: e.target.value })}
+                  className="dropdown-menu"
+              >
+                  {species.map((choice) => (
+                      <option key={choice} value={choice}>
+                          {choice}
+                      </option>
+                  ))}
+              </select>
+          </div>
 
-// This method fetches the records from the database.
-useEffect(() => {
-    async function getOwnerSSNs() {
-    const response = await fetch(`http://localhost:5050/owner/`);
-    if (!response.ok) {
-        const message = `An error occurred with getting owners: ${response.statusText}`;
-        console.error(message);
-        return;
-    }
-    const data = await response.json();
-    const ownerSSN = Array.from(new Set(data.map((doc) => doc._id)));
-    setOwnerSSNs(ownerSSN);
-    }
-    getOwnerSSNs();
-    return;
-}, []);
+          <div class="date-range-container">
+            <label htmlFor="startDate" class="date-label">Start Date</label>
+            <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                class="date-input"
+            />
 
-const [petName, setPetNames] = useState([]);
+            <span class="separator">to</span>
 
-// This method fetches the records from the database.
-useEffect(() => {
-    async function getPetNames() {
-    const response = await fetch(`http://localhost:5050/patient/`);
-    if (!response.ok) {
-        const message = `An error occurred with getting pets: ${response.statusText}`;
-        console.error(message);
-        return;
-    }
-    const data = await response.json();
-    const petName = Array.from(new Set(data.map((doc) => doc._id.name)));
-    setPetNames(petName);
-    }
-    getPetNames();
-    return;
-}, []);
+            <label htmlFor="endDate" class="date-label">End Date</label>
+            <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                class="date-input"
+            />
+          </div>
 
-const [vetLicenseNumber, setVetLicenseNumbers] = useState([]);
+          </div>
+      </div>
+      <input
+          type="submit"
+          value="Submit"
+          className="submit-button"
+      />
+      </form>
 
-// This method fetches the records from the database.
-useEffect(() => {
-    async function getVetLicenseNumbers() {
-    const response = await fetch(`http://localhost:5050/vet/`);
-    if (!response.ok) {
-        const message = `An error occurred with getting vets: ${response.statusText}`;
-        console.error(message);
-        return;
-    }
-    const data = await response.json();
-    const vetLicenseNumber = Array.from(new Set(data.map((doc) => doc._id)));
-    setVetLicenseNumbers(vetLicenseNumber);
-    }
-    getVetLicenseNumbers();
-    return;
-}, []);
+      <div className="results-section">
+        <h3>Query Results</h3>
+        {queryResults.length > 0 ? (
+          <table className="results-table">
+            <thead>
+              <tr>
+                <th>Pet Name</th>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {queryResults.map((result) => (
+                <tr key={result._id}>
+                  <td>{result.petName}</td>
+                  <td>{result.date}</td>
+                  <td>{result.time}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No results found.</p>
+        )}
+      </div>
 
+    </div>
+  );
 }
-*/
