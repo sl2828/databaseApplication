@@ -1,7 +1,5 @@
-import express from "express";
-
-// This will help us connect to the database
-import db from "../db/connection.js";
+import express from 'express';
+import Vet from '../models/vet.js'; // Import the Mongoose model
 
 // // This help convert the id from string to ObjectId for the _id.
 // import { ObjectId } from "mongodb";
@@ -11,85 +9,68 @@ import db from "../db/connection.js";
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 
-// This section will help you get a list of all the records.
-router.get("/", async (req, res) => {
+// Get all vets
+router.get('/', async (req, res) => {
   try {
-    const collection = db.collection("vet");
-    const results = await collection.find({}).toArray();
-    res.status(200).send(results);
+    const vets = await Vet.find();
+    res.status(200).json(vets);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error fetching vets.");
+    res.status(500).json({ message: 'Error fetching vets' });
   }
 });
 
-// This section will help you get a single record by id
-router.get("/:id", async (req, res) => {
-  let collection = db.collection("vet");
-  let query = { _id: req.params.id };
-  let result = await collection.findOne(query);
-
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-
-
-// This section will help you create a new record.
-router.post("/", async (req, res) => {
+// Get an vet by ID
+router.get('/:id', async (req, res) => {
   try {
-    const newDocument = {
-      _id: req.body.id, // ID is veterinary license number
-      name: req.body.name,
-      yearsOfExperience: req.body.yearsOfExperience,
-    };
-
-    let collection = db.collection("vet");
-    const existingRecord = await collection.findOne({ _id: newDocument._id });
-    if (existingRecord) {
-      return res.status(400).send("Vet already exists. Please use a unique ID.");
+    const vet = await Vet.findById(req.params.id);
+    if (!vet) {
+      return res.status(404).json({ message: 'Vet not found' });
     }
-
-    let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    res.status(200).json(vet);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding new vet.");
+    res.status(500).json({ message: 'Error fetching vet' });
   }
 });
 
-// This section will help you update a record by id.
-router.patch("/:id", async (req, res) => {
+// Create a new vet
+router.post('/', async (req, res) => {
   try {
-    const query = { _id: req.params.id };
-    const updates = {
-      $set: {
-        name: req.body.name,
-        yearsOfExperience: req.body.yearsOfExperience,
-      },
-    };
-
-    let collection = db.collection("vet");
-    let result = await collection.updateOne(query, updates);
-    res.send(result).status(200);
+    const newVet = new Vet(req.body);
+    await newVet.save();
+    res.status(201).json(newVet);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error updating record");
+    res.status(500).json({ message: 'Error creating vet' });
   }
 });
 
-
-// This section will help you delete a record
-router.delete("/:id", async (req, res) => {
+// Update an vet
+router.put('/:id', async (req, res) => {
   try {
-    const query = { _id: req.params.id };
-
-    const collection = db.collection("vet");
-    let result = await collection.deleteOne(query);
-
-    res.send(result).status(200);
+    const updatedVet = await Vet.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedVet) {
+      return res.status(404).json({ message: 'Vet not found' });
+    }
+    res.status(200).json(updatedVet);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error deleting vet");
+    res.status(500).json({ message: 'Error updating vet' });
+  }
+});
+
+// Delete an vet
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedVet = await Vet.findByIdAndDelete(req.params.id);
+    if (!deletedVet) {
+      return res.status(404).json({ message: 'Vet not found' });
+    }
+    res.status(200).json({ message: 'Vet deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error deleting vet' });
   }
 });
 

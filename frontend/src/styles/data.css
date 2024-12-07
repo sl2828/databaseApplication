@@ -1,0 +1,128 @@
+/* Label for accessibility */
+label.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+
+/* Styling for the dropdown select */
+.select-menu {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* On focus, add a highlight */
+.select-menu:focus {
+    border-color: #5b9bd5;
+    background-color: #e8f4ff;
+    outline: none;
+}
+
+/* Styling for the options */
+option {
+    padding: 8px 10px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* Styling for the select when disabled */
+select[disabled] {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+/* Option styling for hover effects */
+option:hover {
+    background-color: #e0e0e0;
+}
+
+.date-range-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: Arial, sans-serif;
+}
+
+/* Label for the inputs */
+.date-label {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Input fields styling */
+.date-input {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 150px;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus state for the inputs */
+.date-input:focus {
+    border-color: #5b9bd5;
+    outline: none;
+    background-color: #f0f8ff;
+}
+
+/* Separator styling (the 'to' text) */
+.separator {
+    font-size: 16px;
+    color: #333;
+    margin: 0 5px;
+}
+
+
+.date-range-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    gap: 10px; /* Adds space between the elements */
+    padding: 10px; /* Adds padding around the container */
+  }
+
+  .results-table {
+    width: 60%; /* Adjust as needed for smaller size */
+    margin: 20px auto; /* Center the table */
+    border-collapse: collapse;
+    font-size: 14px; /* Smaller text size */
+    text-align: left;
+    background-color: #fff; /* Optional: light background for table */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-radius: 5px; /* Smooth corners */
+    overflow: hidden; /* Ensure rounded corners appear */
+  }
+  
+  .results-table th,
+  .results-table td {
+    padding: 8px 12px; /* Smaller padding */
+    border: 1px solid #ddd; /* Light border for cells */
+  }
+  
+  .results-table th {
+    background-color: #f4f4f4; /* Light grey background for headers */
+    font-weight: bold;
+    text-transform: uppercase; /* Optional: capitalize headers */
+  }
+  
+  .results-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Light grey for alternate rows */
+  }
+  
+  .results-section h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px; /* Slightly smaller header */
+  }

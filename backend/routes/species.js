@@ -1,93 +1,73 @@
-import express from "express";
-
-// This will help us connect to the database
-import db from "../db/connection.js";
-
-// // This help convert the id from string to ObjectId for the _id.
-// import { ObjectId } from "mongodb";
+import express from 'express';
+import Species from '../models/species.js'; // Import the Mongoose model
 
 // router is an instance of the express router.
 // We use it to define our routes.
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 
-// This section will help you get a list of all the records.
-router.get("/", async (req, res) => {
+// Get all appointments
+router.get('/', async (req, res) => {
   try {
-    const collection = db.collection("species");
-    const results = await collection.find({}).toArray();
-    res.status(200).send(results);
+    const species = await Species.find();
+    res.status(200).json(species);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error fetching species.");
+    res.status(500).json({ message: 'Error fetching species' });
   }
 });
 
-// This section will help you get a single record by id
-router.get("/:id", async (req, res) => {
-  let collection = db.collection("species");
-  let query = { _id: req.params.id };
-  let result = await collection.findOne(query);
-
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-
-
-// This section will help you create a new record.
-router.post("/", async (req, res) => {
+// Get an appointment by ID
+router.get('/:id', async (req, res) => {
   try {
-    const newDocument = {
-      _id: req.body.id, // ID is species name
-      description: req.body.description
-    };
-
-    let collection = db.collection("species");
-    const existingRecord = await collection.findOne({ _id: newDocument._id });
-    if (existingRecord) {
-      return res.status(400).send("Species already exists. Please use a unique ID.");
+    const species = await Species.findById(req.params.id);
+    if (!species) {
+      return res.status(404).json({ message: 'Species not found' });
     }
-
-    let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    res.status(200).json(species);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding new species.");
+    res.status(500).json({ message: 'Error fetching species' });
   }
 });
 
-// This section will help you update a record by id.
-router.patch("/:id", async (req, res) => {
+// Create a new appointment
+router.post('/', async (req, res) => {
   try {
-    const query = { _id: req.params.id };
-    const updates = {
-      $set: {
-        description: req.body.description
-      },
-    };
-
-    let collection = db.collection("species");
-    let result = await collection.updateOne(query, updates);
-    res.send(result).status(200);
+    const newSpecies = new Species(req.body);
+    await newSpecies.save();
+    res.status(201).json(newSpecies);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error updating species");
+    res.status(500).json({ message: 'Error creating species' });
   }
 });
 
-
-// This section will help you delete a record
-router.delete("/:id", async (req, res) => {
+// Update an appointment
+router.put('/:id', async (req, res) => {
   try {
-    const query = { _id: req.params.id };
-
-    const collection = db.collection("species");
-    let result = await collection.deleteOne(query);
-
-    res.send(result).status(200);
+    const updatedSpecies = await Species.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedSpecies) {
+      return res.status(404).json({ message: 'Species not found' });
+    }
+    res.status(200).json(updatedSpecies);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error deleting species");
+    res.status(500).json({ message: 'Error updating species.' });
+  }
+});
+
+// Delete an appointment
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedSpecies = await Species.findByIdAndDelete(req.params.id);
+    if (!deletedSpecies) {
+      return res.status(404).json({ message: 'Species not found' });
+    }
+    res.status(200).json({ message: 'Species deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error deleting species' });
   }
 });
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import '../styles/Lists.css';
+import '../styles/lists.css';
 
 const Owner = (props) => (
   <tr>

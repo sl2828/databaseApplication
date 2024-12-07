@@ -1,7 +1,5 @@
-import express from "express";
-
-// This will help us connect to the database
-import db from "../db/connection.js";
+import express from 'express';
+import Owner from '../models/owner.js'; // Import the Mongoose model
 
 // // This help convert the id from string to ObjectId for the _id.
 // import { ObjectId } from "mongodb";
@@ -11,87 +9,68 @@ import db from "../db/connection.js";
 // The router will be added as a middleware and will take control of requests starting with path /record.
 const router = express.Router();
 
-// This section will help you get a list of all the records.
-router.get("/", async (req, res) => {
+// Get all appointments
+router.get('/', async (req, res) => {
   try {
-    const collection = db.collection("owner");
-    const results = await collection.find({}).toArray();
-    res.status(200).send(results);
+    const owners = await Owner.find();
+    res.status(200).json(owners);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error fetching owners.");
+    res.status(500).json({ message: 'Error fetching owners' });
   }
 });
 
-// This section will help you get a single record by id
-router.get("/:id", async (req, res) => {
-  let collection = db.collection("owner");
-  let query = { _id: req.params.id };
-  let result = await collection.findOne(query);
-
-  if (!result) res.send("Not found").status(404);
-  else res.send(result).status(200);
-});
-
-
-// This section will help you create a new record.
-router.post("/", async (req, res) => {
+// Get an appointment by ID
+router.get('/:id', async (req, res) => {
   try {
-    const newDocument = {
-      _id: req.body.id, // ID is SSN
-      name: req.body.name,
-      email: req.body.email,
-      phoneNumber: req.body.phoneNumber,
-    };
-
-    let collection = db.collection("owner");
-    const existingRecord = await collection.findOne({ _id: newDocument._id });
-    if (existingRecord) {
-      return res.status(400).send("Owner with same SSN already exists. Please use a unique ID.");
+    const owner = await Owner.findById(req.params.id);
+    if (!owner) {
+      return res.status(404).json({ message: 'Owner not found' });
     }
-
-    let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    res.status(200).json(owner);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding new owner.");
+    res.status(500).json({ message: 'Error fetching owner' });
   }
 });
 
-// This section will help you update a record by id.
-router.patch("/:id", async (req, res) => {
+// Create a new appointment
+router.post('/', async (req, res) => {
   try {
-    const query = { _id: req.params.id };
-    const updates = {
-      $set: {
-        name: req.body.name,
-        email: req.body.email,
-        phoneNumber: req.body.phoneNumber
-      },
-    };
-
-    let collection = db.collection("owner");
-    let result = await collection.updateOne(query, updates);
-    res.send(result).status(200);
+    const newOwner = new Owner(req.body);
+    await newOwner.save();
+    res.status(201).json(newOwner);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error updating record");
+    res.status(500).json({ message: 'Error creating owner' });
   }
 });
 
-
-// This section will help you delete a record
-router.delete("/:id", async (req, res) => {
+// Update an appointment
+router.put('/:id', async (req, res) => {
   try {
-    const query = { _id: req.params.id };
-
-    const collection = db.collection("owner");
-    let result = await collection.deleteOne(query);
-
-    res.send(result).status(200);
+    const updatedOwner = await Owner.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedOwner) {
+      return res.status(404).json({ message: 'Owner not found' });
+    }
+    res.status(200).json(updatedOwner);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error deleting owner");
+    res.status(500).json({ message: 'Error updating owner.' });
+  }
+});
+
+// Delete an appointment
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedOwner = await Owner.findByIdAndDelete(req.params.id);
+    if (!deletedOwner) {
+      return res.status(404).json({ message: 'Owner not found' });
+    }
+    res.status(200).json({ message: 'Owner deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error deleting owner' });
   }
 });
 
