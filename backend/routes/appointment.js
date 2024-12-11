@@ -36,6 +36,8 @@ router.get('/:id', async (req, res) => {
 
 // Create a new appointment
 router.post('/', async (req, res) => {
+  console.log("Trying to CREATE an appointment");
+  console.log(req.body);
   try {
     const newAppointment = new Appointment(req.body);
     await newAppointment.save();
@@ -47,18 +49,24 @@ router.post('/', async (req, res) => {
 });
 
 // Update an appointment
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
+  console.log("Trying to PATCH (partially update) an appointment");
   try {
-    const updatedAppointment = await Appointment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedAppointment = await Appointment.findByIdAndUpdate(
+      req.params.id, // The ID of the appointment to update
+      req.body,      // The data to update
+      { new: true, runValidators: true } // Return the updated document
+    );
     if (!updatedAppointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
     res.status(200).json(updatedAppointment);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error updating appointment' });
+    res.status(500).json({ message: 'Error partially updating appointment' });
   }
 });
+
 
 // Delete an appointment
 router.delete('/:id', async (req, res) => {
