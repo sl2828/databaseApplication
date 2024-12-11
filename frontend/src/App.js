@@ -1,6 +1,6 @@
 import './App.css';
 import { Route, Routes } from "react-router-dom";
-import Navbar from './components/navbar';
+import Navbar from './components/Navbar';
 import Home from './pages/Home.js'
 import Data from './pages/Data.js'
 import PatientOwnerList from './pages/PatientOwnerList.js'
