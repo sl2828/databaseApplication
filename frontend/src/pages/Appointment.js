@@ -54,10 +54,12 @@ async function onSubmit(e) {
     e.preventDefault();
     const person = { ...form };
     try {
+      console.log("params.id: " + params.id);
       // if the id is present, we will set the URL to /record/:id, otherwise we will set the URL to /record.
-      const response = await fetch(`http://localhost:5050/appointment${params._id ? "/"+params._id : ""}`, {
+      console.log(`http://localhost:5050/appointment${params.id ? "/"+params.id : ""}`);
+      const response = await fetch(`http://localhost:5050/appointment${params.id ? "/"+params.id : ""}`, {
         // if the id is present, we will use the PATCH method, otherwise we will use the POST method.
-        method: `${params._id ? "PATCH" : "POST"}`,
+        method: `${params.id ? "PATCH" : "POST"}`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -65,6 +67,8 @@ async function onSubmit(e) {
       });
   
       if (!response.ok) {
+        const responseBody = await response.text();
+        console.log("Response Body:", responseBody);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
@@ -95,8 +99,6 @@ useEffect(() => {
 }, []);
 
 const [petName, setPetNames] = useState([]);
-
-// This method fetches the records from the database.
 useEffect(() => {
     async function getPetNames() {
     const response = await fetch(`http://localhost:5050/patient/`);
@@ -114,8 +116,6 @@ useEffect(() => {
 }, []);
 
 const [vetLicenseNumber, setVetLicenseNumbers] = useState([]);
-
-// This method fetches the records from the database.
 useEffect(() => {
     async function getVetLicenseNumbers() {
     const response = await fetch(`http://localhost:5050/vet/`);

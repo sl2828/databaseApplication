@@ -11,17 +11,6 @@ const dbName = "veterinary"; // Replace with your database name
 router.post("/", async (req, res) => {
   const { species, startDate, endDate } = req.body;
 
-  // Build the query object
-  const query = {};
-  if (species) query.species = species;
-  if (startDate && endDate) {
-    query.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
-  } else if (startDate) {
-    query.date = { $gte: new Date(startDate) };
-  } else if (endDate) {
-    query.date = { $lte: new Date(endDate) };
-  }
-
   try {
     // Connect to MongoDB
     const client = new MongoClient(uri);
@@ -30,7 +19,57 @@ router.post("/", async (req, res) => {
     const collection = db.collection("appointments"); // Replace with your collection name
 
     // Execute the query and return results
-    const results = await collection.find(query).toArray();
+    const results = await collection.aggregate([
+      // Join with the 'patients' collection to get pet details
+      {
+        $lookup: {
+          from: "patients",
+          localField: "petName",
+          foreignField: "_id.name",
+          as: "petDetails"
+        }
+      },
+      {
+        $unwind: "$petDetails"
+      },
+      // Join with the 'vets' collection to get vet details
+      {
+        $lookup: {
+          from: "vets",
+          localField: "vetLicenseNumber",
+          foreignField: "_id",
+          as: "vetDetails"
+        }
+      },
+      {
+        $unwind: "$vetDetails"
+      },
+      // Filter by date range and species
+      {
+        $match: {
+          "petDetails.speciesName": species, // Replace with desired species name
+          date: {
+            $gte: new Date(startDate), // Replace with start date
+            $lte: new Date(endDate)    // Replace with end date
+          }
+        }
+      },
+      // Group and calculate averages
+      {
+        $group: {
+          _id: null,
+          averageWeight: { $avg: "$petDetails.weight" },
+          averageYearsOfExperience: { $avg: "$vetDetails.yearsOfExperience" }
+        }
+      }
+    ]).toArray();
+
+    const futureDate = new Date(endDate); // A specific future date
+    console.log(futureDate);
+    const pastDate = new Date(startDate); // A specific future date
+    console.log(pastDate);
+    console.log(species)
+    console.log(results)
     res.json(results);
     await client.close();
   } catch (error) {

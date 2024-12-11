@@ -10,6 +10,7 @@ export default function Data() {
 
   const [species, setSpecies] = useState([]);
   const [queryResults, setQueryResults] = useState([]);
+  const [error, setError] = useState("");
 
   // Update form state
   function updateForm(value) {
@@ -37,6 +38,7 @@ export default function Data() {
   // Handle form submission
   async function onSubmit(e) {
     e.preventDefault();
+    setError(""); // Clear any existing errors
     try {
       const truncatedStartDate = form.startDate?.slice(0, 10) || null;
       const truncatedEndDate = form.endDate?.slice(0, 10) || null;
@@ -62,6 +64,7 @@ export default function Data() {
       setQueryResults(results);
     } catch (error) {
       console.error("Error querying appointments:", error.message);
+      setError("Failed to query appointments.");
     }
   }
 
@@ -69,58 +72,69 @@ export default function Data() {
   return (
     <div>
       <h3 className="form-title">Create/Update Appointment</h3>
+      {error && <p className="error-message">{error}</p>}
       <form onSubmit={onSubmit} className="form-container">
-      <div className="form-section">
+        <div className="form-section">
           <div>
-          <h2 className="section-title">Appointment Info</h2>
-          </div>
-  
-          <div className="form-grid">
-  
-          <div>
-              <legend className="sr-only"> Species </legend>
-              <select
-                  id="speciesDropdown"
-                  name="speciesOptions"
-                  value={form.species}
-                  onChange={(e) => updateForm({ species: e.target.value })}
-                  className="dropdown-menu"
-              >
-                  {species.map((choice) => (
-                      <option key={choice} value={choice}>
-                          {choice}
-                      </option>
-                  ))}
-              </select>
+            <h2 className="section-title">Appointment Info</h2>
           </div>
 
-          <div class="date-range-container">
-            <label htmlFor="startDate" class="date-label">Start Date</label>
-            <input
+          <div className="form-grid">
+
+            <div>
+              <legend className="sr-only"> Species </legend>
+              <select
+                id="speciesDropdown"
+                name="speciesOptions"
+                value={form.species}
+                onChange={(e) => updateForm({ species: e.target.value })}
+                className="dropdown-menu"
+              >
+                <option value="" disabled>
+                  Select a species
+                </option>
+                {species.map((choice) => (
+                  <option key={choice} value={choice}>
+                    {choice}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+
+
+            <div className="date-range-container">
+              <label htmlFor="startDate" className="date-label">Start Date</label>
+              <input
                 type="date"
                 id="startDate"
                 name="startDate"
-                class="date-input"
-            />
+                className="date-input"
+                value={form.startDate} // Bind to form state
+                onChange={(e) => updateForm({ startDate: e.target.value })} // Update form state
+              />
 
-            <span class="separator">to</span>
+              <span className="separator">to</span>
 
-            <label htmlFor="endDate" class="date-label">End Date</label>
-            <input
+              <label htmlFor="endDate" className="date-label">End Date</label>
+              <input
                 type="date"
                 id="endDate"
                 name="endDate"
-                class="date-input"
-            />
-          </div>
+                className="date-input"
+                value={form.endDate} // Bind to form state
+                onChange={(e) => updateForm({ endDate: e.target.value })} // Update form state
+              />
+            </div>
+
 
           </div>
-      </div>
-      <input
+        </div>
+        <input
           type="submit"
           value="Submit"
           className="submit-button"
-      />
+        />
       </form>
 
       <div className="results-section">
@@ -129,17 +143,15 @@ export default function Data() {
           <table className="results-table">
             <thead>
               <tr>
-                <th>Pet Name</th>
-                <th>Date</th>
-                <th>Time</th>
+                <th>Average Weight</th>
+                <th>Average Years of Experience</th>
               </tr>
             </thead>
             <tbody>
               {queryResults.map((result) => (
                 <tr key={result._id}>
-                  <td>{result.petName}</td>
-                  <td>{result.date}</td>
-                  <td>{result.time}</td>
+                  <td>{result.averageWeight}</td>
+                  <td>{result.averageYearsOfExperience}</td>
                 </tr>
               ))}
             </tbody>
